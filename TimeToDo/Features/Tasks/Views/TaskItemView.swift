@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct InstantButtonStyle: ButtonStyle {
+private struct InstantButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
@@ -25,7 +25,6 @@ struct TaskItemView: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: .spacingM) {
-            // Checkbox
             Button(action: onToggle) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 4)
@@ -42,7 +41,6 @@ struct TaskItemView: View {
             }
             .buttonStyle(InstantButtonStyle())
 
-            // Title
             TextField("Task title", text: $editableTitle)
                 .font(.fontBody)
                 .foregroundColor(task.isCompleted ? .colorTextSecondary : .colorTextPrimary)
@@ -54,19 +52,9 @@ struct TaskItemView: View {
                     onUpdateTitle(editableTitle)
                     titleFieldFocused = false
                 }
-                .onChange(of: titleFieldFocused) { _, isFocused in
-                    if isFocused {
-                        editableTitle = task.title
-                    } else {
-                        onUpdateTitle(editableTitle)
-                    }
-                }
 
             Spacer()
         }
         .padding(.vertical, .spacingS)
-        .onAppear {
-            editableTitle = task.title
-        }
     }
 }

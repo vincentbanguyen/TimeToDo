@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#007AFF"/>
+      <stop offset="100%" stop-color="#5856D6"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+
+  <!-- BACK LAYER: Lock — solid white, behind everything -->
+  <!-- Lock shackle — closed, symmetric about x=512 -->
+  <path d="M390 420 L390 310
+           C390 220 440 170 512 170
+           C584 170 634 220 634 310
+           L634 420"
+        fill="none" stroke="white" stroke-width="48" stroke-linecap="round" opacity="0.6"/>
+  <!-- Lock body -->
+  <rect x="312" y="420" width="400" height="340" rx="48" fill="white" opacity="0.4"/>
+
+  <!-- FRONT LAYER: Task box — no border, sits on top of lock -->
+  <rect x="352" y="460" width="320" height="280" rx="32" fill="url(#bg)"/>
+
+  <!-- 3 identical checkbox rows — 26px box, 20px gap to line -->
+  <!-- Row 1 -->
+  <rect x="392" y="497" width="26" height="26" rx="6" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M398 510 L404 517 L414 504" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="438" y1="510" x2="624" y2="510" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.5"/>
+  <!-- Row 2 -->
+  <rect x="392" y="567" width="26" height="26" rx="6" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M398 580 L404 587 L414 574" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="438" y1="580" x2="624" y2="580" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.5"/>
+  <!-- Row 3 -->
+  <rect x="392" y="637" width="26" height="26" rx="6" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M398 650 L404 657 L414 644" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="438" y1="650" x2="624" y2="650" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.5"/>
+</svg>

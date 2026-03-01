@@ -7,9 +7,13 @@ class TaskStore: ObservableObject {
 
     private static let fileName = "tasks.json"
 
-    init() {
-        load()
-    }
+    private static let sectionDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "EEEE, MMM d"
+        return f
+    }()
+
+    init() { load() }
 
     // MARK: - CRUD
 
@@ -22,12 +26,8 @@ class TaskStore: ObservableObject {
 
     func toggleTask(_ task: TaskItem) {
         guard let index = tasks.firstIndex(where: { $0.id == task.id }) else { return }
-
-        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-        impactFeedback.impactOccurred()
-
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
         tasks[index].isCompleted.toggle()
-        tasks[index].lastModified = Date()
         save()
     }
 
@@ -36,96 +36,48 @@ class TaskStore: ObservableObject {
         save()
     }
 
-    func deleteTasks(at offsets: IndexSet) {
-        tasks.remove(atOffsets: offsets)
-        save()
-    }
-
-    func moveTasks(from source: IndexSet, to destination: Int) {
-        tasks.move(fromOffsets: source, toOffset: destination)
-        save()
-    }
-
     func updateTitle(_ task: TaskItem, to newTitle: String) {
         guard let index = tasks.firstIndex(where: { $0.id == task.id }) else { return }
         tasks[index].title = newTitle
-        tasks[index].lastModified = Date()
         save()
     }
 
-    // MARK: - Date-Based Computed
-
-    /// Today's tasks: dueDate <= today (includes rolled-over past tasks)
-    var todayTasks: [TaskItem] {
-        let endOfToday = Calendar.current.startOfDay(for: .now).addingTimeInterval(86400)
-        return tasks.filter { $0.dueDate < endOfToday }
-    }
-
-    /// Today's incomplete tasks only
-    var todayIncompleteTasks: [TaskItem] {
-        todayTasks.filter { !$0.isCompleted }
-    }
+    // MARK: - Blocking Logic
 
     /// Whether all of today's tasks are completed (used for blocking logic)
     var todayAllCompleted: Bool {
-        let today = todayTasks
+        let startOfTomorrow = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: .now)!)
+        let today = tasks.filter { $0.dueDate < startOfTomorrow }
         return today.isEmpty || today.allSatisfy(\.isCompleted)
     }
 
-    /// Tasks grouped by date section for display.
-    /// "Today" includes all tasks with dueDate <= today (rollover).
-    /// Future dates are grouped by their individual day.
+    // MARK: - Sections
+
     var tasksBySection: [(title: String, tasks: [TaskItem])] {
         let calendar = Calendar.current
         let startOfToday = calendar.startOfDay(for: .now)
         let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: startOfToday)!
+        let startOfDayAfter = calendar.date(byAdding: .day, value: 2, to: startOfToday)!
 
-        var sections: [(title: String, tasks: [TaskItem])] = []
+        var sections: [(title: String, tasks: [TaskItem])] = [
+            ("Today", tasks.filter { $0.dueDate < startOfTomorrow }),
+            ("Tomorrow", tasks.filter { $0.dueDate >= startOfTomorrow && $0.dueDate < startOfDayAfter })
+        ]
 
-        // Today: dueDate <= end of today (includes rolled-over past tasks)
-        let today = tasks.filter { $0.dueDate < startOfTomorrow }
-        if !today.isEmpty {
-            sections.append(("Today's Tasks", today))
+        let grouped = Dictionary(grouping: tasks.filter { $0.dueDate >= startOfDayAfter }) {
+            calendar.startOfDay(for: $0.dueDate)
         }
-
-        // Future tasks grouped by date
-        let futureTasks = tasks.filter { $0.dueDate >= startOfTomorrow }
-        let grouped = Dictionary(grouping: futureTasks) { task in
-            calendar.startOfDay(for: task.dueDate)
-        }
-
         for date in grouped.keys.sorted() {
-            guard let dayTasks = grouped[date] else { continue }
-            let title: String
-            if calendar.isDate(date, inSameDayAs: startOfTomorrow) {
-                title = "Tomorrow"
-            } else {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "EEEE, MMM d"
-                title = formatter.string(from: date)
-            }
-            sections.append((title, dayTasks))
+            sections.append((Self.sectionDateFormatter.string(from: date), grouped[date]!))
         }
 
         return sections
     }
 
-    // MARK: - Legacy Computed (kept for compatibility)
-
-    var incompleteTasks: [TaskItem] {
-        tasks.filter { !$0.isCompleted }
-    }
-
-    var allCompleted: Bool {
-        todayAllCompleted
-    }
-
     // MARK: - Persistence
 
-    private static let appGroupID = "group.com.ravinlabsdev.TimeToDo"
-
     private static var fileURL: URL {
-        let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID)
+        let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppSelectionManager.appGroupID)
         let directory = container ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         return directory.appendingPathComponent(fileName)
     }

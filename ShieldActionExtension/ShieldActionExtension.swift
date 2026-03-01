@@ -6,14 +6,7 @@ nonisolated class ShieldActionExtension: ShieldActionDelegate {
         for application: ApplicationToken,
         completionHandler: @escaping (ShieldActionResponse) -> Void
     ) {
-        switch action {
-        case .primaryButtonPressed:
-            completionHandler(.close)
-        case .secondaryButtonPressed:
-            completionHandler(.defer)
-        @unknown default:
-            completionHandler(.defer)
-        }
+        completionHandler(response(for: action))
     }
 
     override func handle(
@@ -21,14 +14,7 @@ nonisolated class ShieldActionExtension: ShieldActionDelegate {
         for category: ActivityCategoryToken,
         completionHandler: @escaping (ShieldActionResponse) -> Void
     ) {
-        switch action {
-        case .primaryButtonPressed:
-            completionHandler(.close)
-        case .secondaryButtonPressed:
-            completionHandler(.defer)
-        @unknown default:
-            completionHandler(.defer)
-        }
+        completionHandler(response(for: action))
     }
 
     override func handle(
@@ -36,13 +22,14 @@ nonisolated class ShieldActionExtension: ShieldActionDelegate {
         for webDomain: WebDomainToken,
         completionHandler: @escaping (ShieldActionResponse) -> Void
     ) {
+        completionHandler(response(for: action))
+    }
+
+    private func response(for action: ShieldAction) -> ShieldActionResponse {
         switch action {
-        case .primaryButtonPressed:
-            completionHandler(.close)
-        case .secondaryButtonPressed:
-            completionHandler(.defer)
-        @unknown default:
-            completionHandler(.defer)
+        case .primaryButtonPressed: .close
+        case .secondaryButtonPressed: .defer
+        @unknown default: .defer
         }
     }
 }

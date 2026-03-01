@@ -1,36 +1,23 @@
+import Combine
 import ManagedSettings
 import FamilyControls
-import Combine
 
 @MainActor
 class BlockingManager: ObservableObject {
-    private let store = ManagedSettingsStore()
+    private let managedStore = ManagedSettingsStore()
     @Published var isBlocking = false
 
-    func blockApps(selection: FamilyActivitySelection) {
-        let apps = selection.applicationTokens
-        let categories = selection.categoryTokens
-        let webDomains = selection.webDomainTokens
+    func evaluate(authorized: Bool, hasSelection: Bool, selection: FamilyActivitySelection, todayAllCompleted: Bool) {
+        let shouldBlock = authorized && hasSelection && !todayAllCompleted
 
-        guard !apps.isEmpty || !categories.isEmpty || !webDomains.isEmpty else { return }
-
-        store.shield.applications = apps.isEmpty ? nil : apps
-        store.shield.applicationCategories = categories.isEmpty ? nil : .specific(categories)
-        store.shield.webDomains = webDomains.isEmpty ? nil : webDomains
-
-        isBlocking = true
-    }
-
-    func unblockApps() {
-        store.clearAllSettings()
-        isBlocking = false
-    }
-
-    func updateBlocking(allTasksCompleted: Bool, selection: FamilyActivitySelection) {
-        if allTasksCompleted {
-            unblockApps()
+        if shouldBlock {
+            managedStore.shield.applications = selection.applicationTokens.isEmpty ? nil : selection.applicationTokens
+            managedStore.shield.applicationCategories = selection.categoryTokens.isEmpty ? nil : .specific(selection.categoryTokens)
+            managedStore.shield.webDomains = selection.webDomainTokens.isEmpty ? nil : selection.webDomainTokens
+            isBlocking = true
         } else {
-            blockApps(selection: selection)
+            managedStore.clearAllSettings()
+            isBlocking = false
         }
     }
 }

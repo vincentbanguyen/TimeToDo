@@ -24,8 +24,8 @@ extension Color {
 
 // MARK: - Typography Tokens
 extension Font {
-    static let fontBody = Font.system(size: 17, weight: .regular)
-    static let fontBodyBold = Font.system(size: 17, weight: .semibold)
+    static let fontBody = Font.system(size: 15, weight: .regular)
+    static let fontBodyBold = Font.system(size: 15, weight: .semibold)
     static let fontHeading = Font.system(size: 24, weight: .bold)
     static let fontHeadingLarge = Font.system(size: 32, weight: .bold)
     static let fontCaption = Font.system(size: 13, weight: .regular)

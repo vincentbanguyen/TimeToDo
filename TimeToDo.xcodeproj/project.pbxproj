@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E1433B832F52F3F200FDCA29 /* DeviceActivityReport.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = E1433B772F52F3F200FDCA29 /* DeviceActivityReport.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E1433B8E2F52F8DF00FDCA29 /* DeviceActivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1433B8C2F52F8D500FDCA29 /* DeviceActivity.framework */; };
+		E1433B8F2F52F8DF00FDCA29 /* DeviceActivity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E1433B8C2F52F8D500FDCA29 /* DeviceActivity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E1C7000C2F52E0000023B398 /* ShieldConfigurationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E1C700012F52E0000023B398 /* ShieldConfigurationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E1D8000C2F52E0000023B398 /* ShieldActionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E1D800012F52E0000023B398 /* ShieldActionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -48,6 +50,17 @@
 			name = "Embed ExtensionKit Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1433B902F52F8DF00FDCA29 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E1433B8F2F52F8DF00FDCA29 /* DeviceActivity.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E1E900012F52E0000023B398 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -64,6 +77,7 @@
 
 /* Begin PBXFileReference section */
 		E1433B772F52F3F200FDCA29 /* DeviceActivityReport.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = DeviceActivityReport.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1433B8C2F52F8D500FDCA29 /* DeviceActivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceActivity.framework; path = System/Library/Frameworks/DeviceActivity.framework; sourceTree = SDKROOT; };
 		E1B635352F52D49B0023B398 /* TimeToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1C700012F52E0000023B398 /* ShieldConfigurationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShieldConfigurationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1D800012F52E0000023B398 /* ShieldActionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShieldActionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +144,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1433B8E2F52F8DF00FDCA29 /* DeviceActivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +172,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E1433B8B2F52F8D500FDCA29 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1433B8C2F52F8D500FDCA29 /* DeviceActivity.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E1B6352C2F52D49B0023B398 = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +187,7 @@
 				E1C700022F52E0000023B398 /* ShieldConfigurationExtension */,
 				E1D800022F52E0000023B398 /* ShieldActionExtension */,
 				E1433B782F52F3F200FDCA29 /* DeviceActivityReport */,
+				E1433B8B2F52F8D500FDCA29 /* Frameworks */,
 				E1B635362F52D49B0023B398 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -189,6 +213,7 @@
 				E1433B732F52F3F200FDCA29 /* Sources */,
 				E1433B742F52F3F200FDCA29 /* Frameworks */,
 				E1433B752F52F3F200FDCA29 /* Resources */,
+				E1433B902F52F8DF00FDCA29 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

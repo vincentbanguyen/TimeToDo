@@ -9,9 +9,20 @@ import SwiftUI
 
 struct TotalActivityView: View {
     let totalActivity: String
-    
+
     var body: some View {
-        Text(totalActivity)
+        VStack(spacing: 12) {
+            Image(systemName: "hourglass")
+                .font(.system(size: 40))
+                .foregroundColor(.blue)
+            Text("Total Screen Time")
+                .font(.headline)
+                .foregroundColor(.secondary)
+            Text(totalActivity)
+                .font(.system(size: 34, weight: .bold))
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 32)
     }
 }
 

@@ -1,6 +1,6 @@
-import Foundation
-import FamilyControls
 import Combine
+import FamilyControls
+import Foundation
 
 @MainActor
 class AppSelectionManager: ObservableObject {
@@ -17,17 +17,9 @@ class AppSelectionManager: ObservableObject {
         !selection.webDomainTokens.isEmpty
     }
 
-    var selectedCount: Int {
-        selection.applicationTokens.count +
-        selection.categoryTokens.count +
-        selection.webDomainTokens.count
-    }
+    init() { load() }
 
-    init() {
-        load()
-    }
-
-    // MARK: - Persistence (App Group UserDefaults)
+    // MARK: - Persistence
 
     private var sharedDefaults: UserDefaults? {
         UserDefaults(suiteName: Self.appGroupID)
