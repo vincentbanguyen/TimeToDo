@@ -1,11 +1,10 @@
 import SwiftUI
 import Combine
+import WidgetKit
 
 @MainActor
 class TaskStore: ObservableObject {
     @Published var tasks: [TaskItem] = []
-
-    private static let fileName = "tasks.json"
 
     private static let sectionDateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -76,28 +75,16 @@ class TaskStore: ObservableObject {
 
     // MARK: - Persistence
 
-    private static var fileURL: URL {
-        let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: AppSelectionManager.appGroupID)
-        let directory = container ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        return directory.appendingPathComponent(fileName)
-    }
-
     private func save() {
-        do {
-            let data = try JSONEncoder().encode(tasks)
-            try data.write(to: Self.fileURL, options: .atomic)
-        } catch {
-            print("Failed to save tasks: \(error)")
-        }
+        TaskFileManager.saveTasks(tasks)
+        WidgetCenter.shared.reloadTimelines(ofKind: "TodoWidget")
     }
 
     private func load() {
-        guard FileManager.default.fileExists(atPath: Self.fileURL.path) else { return }
-        do {
-            let data = try Data(contentsOf: Self.fileURL)
-            tasks = try JSONDecoder().decode([TaskItem].self, from: data)
-        } catch {
-            print("Failed to load tasks: \(error)")
-        }
+        tasks = TaskFileManager.loadTasks()
+    }
+
+    func reloadFromDisk() {
+        tasks = TaskFileManager.loadTasks()
     }
 }

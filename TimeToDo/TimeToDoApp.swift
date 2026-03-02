@@ -1,5 +1,9 @@
 import SwiftUI
 
+extension Notification.Name {
+    static let tasksChangedFromWidget = Notification.Name("tasksChangedFromWidget")
+}
+
 @main
 struct TimeToDoApp: App {
     @StateObject private var taskStore = TaskStore()
@@ -27,9 +31,31 @@ struct TimeToDoApp: App {
                 .onChange(of: selectionManager.selection) { _, _ in evaluateBlocking() }
                 .onChange(of: blockingDisabled) { _, _ in evaluateBlocking() }
                 .onChange(of: scenePhase) { _, phase in
-                    if phase == .active { evaluateBlocking() }
+                    if phase == .active {
+                        taskStore.reloadFromDisk()
+                        evaluateBlocking()
+                    }
                 }
+                .onReceive(NotificationCenter.default.publisher(for: .tasksChangedFromWidget)) { _ in
+                    taskStore.reloadFromDisk()
+                    evaluateBlocking()
+                }
+                .onAppear { registerForWidgetChanges() }
         }
+    }
+
+    private func registerForWidgetChanges() {
+        let name = "com.ravinlabsdev.TimeToDo.tasksChanged" as CFString
+        CFNotificationCenterAddObserver(
+            CFNotificationCenterGetDarwinNotifyCenter(),
+            nil,
+            { _, _, _, _, _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .tasksChangedFromWidget, object: nil)
+                }
+            },
+            name, nil, .deliverImmediately
+        )
     }
 
     private func evaluateBlocking() {

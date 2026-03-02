@@ -4,7 +4,7 @@ import Foundation
 
 @MainActor
 class AppSelectionManager: ObservableObject {
-    static let appGroupID = "group.com.ravinlabsdev.TimeToDo"
+    static let appGroupID = AppConstants.appGroupID
     private static let selectionKey = "selectedApps"
 
     @Published var selection = FamilyActivitySelection() {
